@@ -63,8 +63,8 @@ function {
   GEAR="\u2699"
 }
 
+# shortens the pwd for use in prompt
 short_pwd() {
-  # shortens the pwd for use in prompt
 
   local current_dir="${1:-${PWD}}"
   local return_dir='~'
@@ -177,7 +177,7 @@ prompt_git_super_status() {
 }
 
 prompt_ruby() {
-  prompt_segment $BULLETTRAIN_RUBY_BG $BULLETTRAIN_RUBY_FG $BULLETTRAIN_RUBY_PREFIX" $(rbenv version-name) "
+  prompt_segment $BULLETTRAIN_RUBY_BG $BULLETTRAIN_RUBY_FG " $(rbenv version-name)"
 }
 
 prompt_nvm() {

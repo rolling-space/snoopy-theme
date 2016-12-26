@@ -106,8 +106,8 @@ git_super_status() {
 
 # Default values for the appearance of the prompt. Configure at will.
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[black]%}${BRANCH}"
-ZSH_THEME_GIT_PROMPT_BRANCH="%{$fg_bold[red]%} "
-ZSH_THEME_GIT_PROMPT_SUFFIX=" %{$fg_bold[black]%}\$"
+ZSH_THEME_GIT_PROMPT_BRANCH="%{$fg_bold[red]%}"
+ZSH_THEME_GIT_PROMPT_SUFFIX="%{$fg_bold[black]%}\$%{${reset_color}%}"
 ZSH_THEME_GIT_PROMPT_SEPARATOR="%{$fg_bold[black]%}|"
 ZSH_THEME_GIT_PROMPT_STAGED="%{$fg[red]%}%{●%G%}"
 ZSH_THEME_GIT_PROMPT_CONFLICTS="%{$fg[red]%}%{✖%G%}"
