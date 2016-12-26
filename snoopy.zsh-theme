@@ -23,10 +23,39 @@
 CURRENT_BG='NONE'
 PRIMARY_FG=black
 
+# NVM
+if [ ! -n "${BULLETTRAIN_NVM_SHOW+1}" ]; then
+  BULLETTRAIN_NVM_SHOW=true
+fi
+if [ ! -n "${BULLETTRAIN_NVM_BG+1}" ]; then
+  BULLETTRAIN_NVM_BG=green
+fi
+if [ ! -n "${BULLETTRAIN_NVM_FG+1}" ]; then
+  BULLETTRAIN_NVM_FG=white
+fi
+if [ ! -n "${BULLETTRAIN_NVM_PREFIX+1}" ]; then
+  BULLETTRAIN_NVM_PREFIX="⬡ "
+fi
+
+# RUBY
+if [ ! -n "${BULLETTRAIN_RUBY_SHOW+1}" ]; then
+  BULLETTRAIN_RUBY_SHOW=true
+fi
+if [ ! -n "${BULLETTRAIN_RUBY_BG+1}" ]; then
+  BULLETTRAIN_RUBY_BG=magenta
+fi
+if [ ! -n "${BULLETTRAIN_RUBY_FG+1}" ]; then
+  BULLETTRAIN_RUBY_FG=white
+fi
+if [ ! -n "${BULLETTRAIN_RUBY_PREFIX+1}" ]; then
+  BULLETTRAIN_RUBY_PREFIX=♦️
+fi
+
 # Characters
 function {
   local LC_ALL="" LC_CTYPE="en_US.UTF-8"
   SEGMENT_SEPARATOR="\ue0b0"
+  RSEGMENT_SEPARATOR="\ue0b2"
   PLUSMINUS="\u00b1"
   BRANCH="\ue0a0"
   DETACHED="\u27a6"
@@ -66,6 +95,29 @@ prompt_segment() {
   fi
   CURRENT_BG=${1}
   [[ -n ${3} ]] && print -n ${3}
+}
+
+right_prompt_segment() {
+  local bg fg
+  [[ -n ${1} ]] && bg="%K{${1}}" || bg="%k"
+  [[ -n ${2} ]] && fg="%F{${2}}" || fg="%f"
+  if [[ $CURRENT_BG != 'NONE' && ${1} != $CURRENT_BG ]]; then
+    print -n "%{${bg}%F{${CURRENT_BG}}%}${RSEGMENT_SEPARATOR}%{${fg}%}"
+  else
+    print -n "%{${bg}%}%{${fg}%}"
+  fi
+  CURRENT_BG=${1}
+  [[ -n ${3} ]] && print -n ${3}
+}
+
+right_prompt_end() {
+  if [[ -n $CURRENT_BG ]]; then
+    print -n "%{%k%F{${CURRENT_BG}}%}${RSEGMENT_SEPARATOR}"
+  else
+    print -n "%{%k%}"
+  fi
+  print -n "%{%f%}"
+  CURRENT_BG=''
 }
 
 # End the prompt, closing any open segments
@@ -148,6 +200,31 @@ prompt_git_super_status() {
   prompt_segment white green " $(git_super_status)"
 }
 
+right_prompt_ruby() {
+  right_prompt_segment $BULLETTRAIN_RUBY_BG $BULLETTRAIN_RUBY_FG $BULLETTRAIN_RUBY_PREFIX" $(rbenv version-name) "
+}
+
+prompt_ruby() {
+  prompt_segment $BULLETTRAIN_RUBY_BG $BULLETTRAIN_RUBY_FG $BULLETTRAIN_RUBY_PREFIX" $(rbenv version-name) "
+}
+
+right_prompt_nvm() {
+  # if [[ $BULLETTRAIN_NVM_SHOW == false ]]; then
+  #   return
+  # fi
+  # local nvm_prompt
+  #
+  # nvm_prompt=$(nvm current 2>/dev/null)
+  # [[ "${nvm_prompt}x" == "x" ]] && return
+
+  # nvm_prompt="${nvm_prompt}"
+  right_prompt_segment $BULLETTRAIN_NVM_BG $BULLETTRAIN_NVM_FG $BULLETTRAIN_NVM_PREFIX"$(nvm current)"
+}
+
+prompt_nvm() {
+  prompt_segment $BULLETTRAIN_NVM_BG $BULLETTRAIN_NVM_FG $BULLETTRAIN_NVM_PREFIX"$(nvm current)"
+}
+
 ## Main prompt
 prompt_eriner_main() {
   RETVAL=$?
@@ -156,13 +233,24 @@ prompt_eriner_main() {
   prompt_context
   prompt_ranger
   prompt_dir
+  prompt_ruby
+  # prompt_nvm
   prompt_git_super_status
   # prompt_git
   prompt_end
 }
 
+right_prompt_eriner_main() {
+  RETVAL=$?
+  CURRENT_BG='NONE'
+  right_prompt_end
+  prompt_ruby
+  prompt_nvm
+}
+
 prompt_eriner_precmd() {
   PROMPT='%{%f%b%k%}$(prompt_eriner_main) '
+  # RPROMPT='$(right_prompt_eriner_main)'
 }
 
 prompt_eriner_setup() {
@@ -174,10 +262,10 @@ prompt_eriner_setup() {
 
   add-zsh-hook precmd prompt_eriner_precmd
 
-  zstyle ':vcs_info:*' enable git
-  zstyle ':vcs_info:*' check-for-changes false
-  zstyle ':vcs_info:git*' formats '%b'
-  zstyle ':vcs_info:git*' actionformats '%b (%a)'
+  # zstyle ':vcs_info:*' enable git
+  # zstyle ':vcs_info:*' check-for-changes false
+  # zstyle ':vcs_info:git*' formats '%b'
+  # zstyle ':vcs_info:git*' actionformats '%b (%a)'
 }
 
 prompt_eriner_setup "$@"
