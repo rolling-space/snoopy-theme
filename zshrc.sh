@@ -24,7 +24,6 @@ add-zsh-hook precmd precmd_update_git_vars
 function {
   local LC_ALL="" LC_CTYPE="en_US.UTF-8"
   SEGMENT_SEPARATOR="\ue0b0"
-  RSEGMENT_SEPERATOR="\ue0b3"
   PLUSMINUS="\u00b1"
   BRANCH="\ue0a0"
   DETACHED="\u27a6"
@@ -108,7 +107,7 @@ git_super_status() {
 # Default values for the appearance of the prompt. Configure at will.
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[black]%}${BRANCH}"
 ZSH_THEME_GIT_PROMPT_BRANCH="%{$fg_bold[red]%} "
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{$fg_bold[black]%}\$"
+ZSH_THEME_GIT_PROMPT_SUFFIX=" %{$fg_bold[black]%}\$"
 ZSH_THEME_GIT_PROMPT_SEPARATOR="%{$fg_bold[black]%}|"
 ZSH_THEME_GIT_PROMPT_STAGED="%{$fg[red]%}%{●%G%}"
 ZSH_THEME_GIT_PROMPT_CONFLICTS="%{$fg[red]%}%{✖%G%}"
